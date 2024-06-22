@@ -26,6 +26,17 @@
 - 矩阵打印：print_matrix
 - 释放矩阵：free_matrix
 - 二维数组转矩阵：array_to_matrix
+- 矩阵数乘：matrix_multiply
+- 矩阵转置：matrix_transpose
+- 矩阵乘法：matrix_mul
+- 矩阵加法：matrix_add
+- 矩阵减法：matrix_sub
+- 矩阵转置：matrix_transpose
+- 矩阵复制：matrix_copy
+- 生成单位矩阵：identity_matrix
+### 行列式
+行列式是一个结构体，包含行数、列数、数据指针。名为DETERMINANT。
+- 初始化行列式：det_init
 
 ## 正在开发的函数
 - 矩阵运算：矩阵相加、减法、乘法、除法...
