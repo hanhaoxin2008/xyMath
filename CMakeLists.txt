@@ -9,4 +9,8 @@ add_library(xyMath STATIC src/xymath.c
         src/basic.c
         src/matrix.h
         src/matrix.c
+        src/determinant.c
+        src/determinant.h
 )
+
+
