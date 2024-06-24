@@ -65,6 +65,7 @@ ERROR  matrix_copy(Matrix* mat1, Matrix* res);
 //生成单位矩阵
 ERROR  matrix_identity(INDEX n, Matrix* res);
 //矩阵的行列式
+REAL matrix_det(Matrix *mat);
 
 
 

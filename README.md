@@ -34,6 +34,7 @@
 - 矩阵转置：matrix_transpose
 - 矩阵复制：matrix_copy
 - 生成单位矩阵：identity_matrix
+- 矩阵行列式：matrix_det
 ### 行列式
 行列式是一个结构体，包含行数、列数、数据指针。名为DETERMINANT。
 - 初始化行列式：det_init

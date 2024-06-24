@@ -353,20 +353,75 @@ ERROR  matrix_identity(INDEX n, Matrix* res){
 
 }
 
+REAL matrix_det(Matrix*mat){
+    /**
+     * 矩阵行列式
+     * @param mat 矩阵
+     * @return 行列式值
+     */
+    //矩阵行列式规则：n阶方阵的行列式的值等于n个元素的乘积的排列组合
+    //对于n阶方阵，其行列式的值可以由对角线元素的乘积和对角线以下元素的乘积的排列组合得到
+    //对于2阶方阵，其行列式的值可以由对角线元素的乘积和对角线以下元素的乘积的排列组合得到
+    //对于3阶方阵，其行列式的值可以由对角线元素的乘积和对角线以下元素的乘积的排列组合得到
+    //对于n阶方阵，其行列式的值可以由对角线元素的乘积和对角线以下元素的乘积的排列组合得到
+
+
+    //检查输入
+    if(mat == NULL) {
+        return ERROR_NULL_POINTER;
+    }
+
+    //检查矩阵维度是否合法
+    if(mat->rows != mat->cols ){
+        //不是方阵
+        return ERROR_DIMENSION_NOT_MATCH;
+    }
+
+    //2阶方阵
+    if(mat->rows == 2){
+        return mat->data[0] * mat->data[3] - mat->data[1] * mat->data[2];
+    }
+    if(mat->rows == 1){
+        return mat->data[0];
+    }
+    //3阶方阵
+    if(mat->rows == 3){
+        return mat->data[0] * (mat->data[4] * mat->data[8] - mat->data[5] * mat->data[7]) - mat->data[1] * (mat->data[3] * mat->data[8] - mat->data[5] * mat->data[6]) + mat->data[2] * (mat->data[3] * mat->data[7] - mat->data[4] * mat->data[6]);
+    }
+    //n阶方阵
+    REAL det = 0;
+    for(INDEX i = 0; i < mat->rows; i++){
+        //计算第i行的乘积
+        REAL prod = 1;
+        for(INDEX j = 0; j < mat->cols; j++){
+            if(i != j){
+                prod *= mat->data[i * mat->cols + j];
+            }
+        }
+        //计算乘积的排列组合
+        if(i % 2 == 0){
+            det += prod;
+        }else{
+            det -= prod;
+        }
+    }
+    return det;
+}
+
+
 
 
 
 void main(){
 
-    REAL arr[4][3] = {{1,2,3},{4,5,6},{7,8,9},{10,11,12}};
-    Matrix mat1,MAT2;
-    array_to_matrix((REAL**)arr,&mat1,4,3);
-    ERROR err = matrix_copy(&mat1,&MAT2);
-    if(err != ERROR_NONE){
-        print_error(err);
-    }
-    print_matrix(MAT2);
+    REAL arr[2][2] = {{1,2},{3,4}};
+    Matrix mat1;
+    array_to_matrix((REAL**)arr, &mat1, 2, 2);
+    REAL det = matrix_det(&mat1);
+    printf("det = %.2f\n", det);
+
 
 }
+
 
 
