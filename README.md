@@ -28,7 +28,7 @@
 - 二维数组转矩阵：array_to_matrix
 - 矩阵数乘：matrix_multiply
 - 矩阵转置：matrix_transpose
-- 矩阵乘法：matrix_mul
+- 矩阵乘法：matrix_mul(支持多线程)
 - 矩阵加法：matrix_add
 - 矩阵减法：matrix_sub
 - 矩阵转置：matrix_transpose
@@ -57,3 +57,5 @@ int main() {
     return 0;
 }
 ``` 
+## 更新日志
+- 2024.6.25 支持多线程矩阵乘法

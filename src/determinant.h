@@ -1,7 +1,3 @@
-//
-// Created by hanha on 2024/6/22.
-//
-
 #ifndef XYMATH_DETERMINANT_H
 #define XYMATH_DETERMINANT_H
 

@@ -41,6 +41,15 @@ typedef struct {
     REAL* data; //数据指针
 } Matrix;
 
+//矩阵乘法线程结构体
+struct mat_mul_thread_arg {
+    Matrix* mat1;
+    Matrix* mat2;
+    Matrix* res;
+    INDEX col;
+    INDEX row;
+};
+
 ERROR init_matrix(Matrix* mat, INDEX rows, INDEX cols);//初始化矩阵
 void print_error(ERROR err);//打印错误信息
 ERROR free_matrix(Matrix* mat);//释放矩阵内存

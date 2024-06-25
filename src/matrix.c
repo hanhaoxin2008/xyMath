@@ -4,6 +4,7 @@
 #include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "pthread.h"
 #include <math.h>
 
 
@@ -235,6 +236,28 @@ ERROR  matrix_sub(Matrix* mat1, Matrix* mat2, Matrix* res){
     }
     return ERROR_NONE;
 }
+
+//matrix_mul_thread
+void* matrix_mul_thread(void* arg){
+
+    struct mat_mul_thread_arg* arg_p = (struct mat_mul_thread_arg*)arg;
+    Matrix* mat1 = arg_p->mat1;
+    Matrix* mat2 = arg_p->mat2;
+    Matrix* res = arg_p->res;
+    INDEX row = arg_p->row;
+    INDEX col = arg_p->col;
+    //矩阵乘法
+    REAL sum = 0;
+    for(INDEX k = 0; k < mat2->cols; k++){
+        sum += mat1->data[row * mat1->cols + k] * mat2->data[k * mat2->cols + col];
+    }
+    res->data[row * res->cols + col] = sum;
+    return NULL;
+}
+
+
+
+
 ERROR  matrix_mul(Matrix* mat1, Matrix* mat2, Matrix* res){
     /**
      * 矩阵乘法
@@ -259,15 +282,40 @@ ERROR  matrix_mul(Matrix* mat1, Matrix* mat2, Matrix* res){
         return err;
     }
     //矩阵乘法
-    for(INDEX i = 0; i < mat1->rows; i++){
-        for(INDEX j = 0; j < mat2->cols; j++){
-            REAL sum = 0;
-            for(INDEX k = 0; k < mat1->cols; k++){
-                sum += mat1->data[i * mat1->cols + k] * mat2->data[k * mat2->cols + j];
+
+    if(mat1->rows * mat2->cols <= 100){
+        for(INDEX i = 0; i < mat1->rows; i++) {
+            for (INDEX j = 0; j < mat2->cols; j++) {
+                REAL sum = 0;
+                for (INDEX k = 0; k < mat1->cols; k++) {
+                    sum += mat1->data[i * mat1->cols + k] * mat2->data[k * mat2->cols + j];
+                }
+                res->data[i * res->cols + j] = sum;
             }
-            res->data[i * res->cols + j] = sum;
+        }
+    }else{
+        pthread_t threads[mat1->rows*mat2->cols];
+        for(INDEX i = 0; i < mat1->rows; i++){
+            for(INDEX j = 0; j < mat2->cols; j++){
+
+                struct mat_mul_thread_arg *arg;
+
+                arg = (struct mat_mul_thread_arg*)malloc(sizeof(struct mat_mul_thread_arg));
+                arg->mat1 = mat1;
+                arg->mat2 = mat2;
+                arg->res = res;
+                arg->row = i;
+                arg->col = j;
+                pthread_create(&threads[i*mat2->cols+j],NULL,matrix_mul_thread, (void*)arg);
+            }
+        }
+        for(INDEX i = 0; i < mat1->rows; i++){
+            for(INDEX j = 0; j < mat2->cols; j++){
+                pthread_join(threads[i*mat2->cols+j],NULL);
+            }
         }
     }
+
     return ERROR_NONE;
 }
 ERROR  matrix_transpose(Matrix* mat, Matrix* res){
@@ -408,20 +456,6 @@ REAL matrix_det(Matrix*mat){
     return det;
 }
 
-
-
-
-
-void main(){
-
-    REAL arr[2][2] = {{1,2},{3,4}};
-    Matrix mat1;
-    array_to_matrix((REAL**)arr, &mat1, 2, 2);
-    REAL det = matrix_det(&mat1);
-    printf("det = %.2f\n", det);
-
-
-}
 
 
 
